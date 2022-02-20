@@ -75,7 +75,6 @@ func (m *MetaStore) AddNode(nodeAddr string, succ *bool) error {
     log.Println("succNode: ", succNode)
     log.Println("predNode: ", predNode)
     log.Println("inst: ", inst)
-    log.Println()
     
     // connect to the server
     conn, e := rpc.DialHTTP("tcp", succNode.Addr)
@@ -93,6 +92,7 @@ func (m *MetaStore) AddNode(nodeAddr string, succ *bool) error {
     // deal with added node in BlockStoreRing
     m.BlockStoreRing.AddNode(nodeAddr)
     log.Println("ring: ", m.BlockStoreRing)
+    log.Println()
     
     // close the connection
     return conn.Close()
