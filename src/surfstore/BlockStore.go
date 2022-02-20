@@ -65,16 +65,16 @@ func (bs *BlockStore) HasBlocks(blockHashesIn []string, blockHashesOut *[]string
 }
 
 // Helper function for modulo operation
-func mod(a int, b int) int {
-    m := a % b
-    if a < 0 && b < 0 {
-        m -= b
-    }
-    if a < 0 && b > 0 {
-        m += b
-    }
-    return m
-}
+// func mod(a int, b int) int {
+//     m := a % b
+//     if a < 0 && b < 0 {
+//         m -= b
+//     }
+//     if a < 0 && b > 0 {
+//         m += b
+//     }
+//     return m
+// }
 
 func modWithin(lower, upper, test, mod int) bool {
     lower %= mod

@@ -44,6 +44,7 @@ func (ms *ConsistentHashRing) ComputeNodeIndex(nodeAddr string) int {
 func (ms *ConsistentHashRing) FindHostingNode(ringIndex int) Node {
     // Try to implement a O(log N) solution here using binary search.
     // It's also fine if you can't because we don't test your performance.
+    ringIndex %= ms.RingSize
     var listId, minListId int
     hostIndex, minNodeIndex := ms.RingSize, ms.RingSize
     for i, node := range ms.Nodes {

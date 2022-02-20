@@ -67,7 +67,7 @@ func (m *MetaStore) AddNode(nodeAddr string, succ *bool) error {
     
     // call RPC to migrate some blocks from successor node to this node
     inst := MigrationInstruction{
-        LowerIndex: predNode.Index + 1,
+        LowerIndex: (predNode.Index + 1) % m.BlockStoreRing.RingSize,
         UpperIndex: newIndex,
         DestAddr:   nodeAddr,
     }
@@ -104,12 +104,12 @@ func (m *MetaStore) RemoveNode(nodeAddr string, succ *bool) error {
     rmIndex := m.BlockStoreRing.ComputeNodeIndex(nodeAddr)
     
     // find successor node
-    succNode := m.BlockStoreRing.FindHostingNode(rmIndex)
+    succNode := m.BlockStoreRing.FindHostingNode(rmIndex+1)  // get mod inside function
     predNode := m.BlockStoreRing.FindPredNode(rmIndex)
     
     // call RPC to migrate all blocks from this node to successor node
     inst := MigrationInstruction{
-        LowerIndex: predNode.Index + 1,
+        LowerIndex: (predNode.Index + 1) % m.BlockStoreRing.RingSize,
         UpperIndex: rmIndex,
         DestAddr:   succNode.Addr,
     }
