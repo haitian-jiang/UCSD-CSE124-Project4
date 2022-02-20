@@ -2,6 +2,7 @@ package surfstore
 
 import (
     "fmt"
+    "log"
     "net/rpc"
 )
 
@@ -70,6 +71,11 @@ func (m *MetaStore) AddNode(nodeAddr string, succ *bool) error {
         UpperIndex: newIndex,
         DestAddr:   nodeAddr,
     }
+    log.Printf("Adding %s, index: %d\n", nodeAddr, newIndex)
+    log.Println("succNode: ", succNode)
+    log.Println("predNode: ", predNode)
+    log.Println("inst: ", inst)
+    log.Println()
     
     // connect to the server
     conn, e := rpc.DialHTTP("tcp", succNode.Addr)
@@ -86,6 +92,7 @@ func (m *MetaStore) AddNode(nodeAddr string, succ *bool) error {
     
     // deal with added node in BlockStoreRing
     m.BlockStoreRing.AddNode(nodeAddr)
+    log.Println("ring: ", m.BlockStoreRing)
     
     // close the connection
     return conn.Close()
@@ -106,6 +113,11 @@ func (m *MetaStore) RemoveNode(nodeAddr string, succ *bool) error {
         UpperIndex: rmIndex,
         DestAddr:   succNode.Addr,
     }
+    log.Printf("Removing %s, index: %d\n", nodeAddr, rmIndex)
+    log.Println("succNode: ", succNode)
+    log.Println("predNode: ", predNode)
+    log.Println("inst: ", inst)
+    log.Println()
     
     // connect to the server
     conn, e := rpc.DialHTTP("tcp", nodeAddr)
