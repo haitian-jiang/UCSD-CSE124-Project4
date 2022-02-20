@@ -45,17 +45,34 @@ func (ms *ConsistentHashRing) FindHostingNode(ringIndex int) Node {
     // Try to implement a O(log N) solution here using binary search.
     // It's also fine if you can't because we don't test your performance.
     var listId, minListId int
-    nodeIndex, minNodeIndex := ms.RingSize, ms.RingSize
+    hostIndex, minNodeIndex := ms.RingSize, ms.RingSize
     for i, node := range ms.Nodes {
         if node.Index < minNodeIndex { // store the node with the smallest index
             minNodeIndex, minListId = node.Index, i
         }
-        if node.Index < nodeIndex && node.Index >= ringIndex {
-            nodeIndex, listId = node.Index, i
+        if node.Index < hostIndex && node.Index >= ringIndex {
+            hostIndex, listId = node.Index, i
         }
     }
-    if nodeIndex == ms.RingSize { // ringIndex is larger than any node's index
-        nodeIndex, listId = minNodeIndex, minListId
+    if hostIndex == ms.RingSize { // ringIndex is larger than any node's index
+        hostIndex, listId = minNodeIndex, minListId
+    }
+    return ms.Nodes[listId]
+}
+
+func (ms *ConsistentHashRing) FindPredNode(queryIndex int) Node {
+    var listId, maxListId int
+    predIndex, maxNodeIndex := -1, -1
+    for i, node := range ms.Nodes {
+        if node.Index > maxNodeIndex {
+            maxNodeIndex, maxListId = node.Index, i
+        }
+        if node.Index > predIndex && node.Index < queryIndex {
+            predIndex, listId = node.Index, i
+        }
+    }
+    if predIndex == -1 {
+        predIndex, listId = maxNodeIndex, maxListId
     }
     return ms.Nodes[listId]
 }
